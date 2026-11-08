@@ -18,18 +18,18 @@ To run:
 bun --watch src/index.ts
 ```
 
-##test api
-###get all pets
+## test api
+### get all pets
 ```
 http://localhost:8000/pets
 ```
-###filter pet by species
+### filter pet by species
 you can change cat with other species
 ```
 http://localhost:8000/pets?species=cat
 ```
 
-###filter pet by age
+### filter pet by age
 you can change min and max age
 ```
 http://localhost:8000/pets?minAge=1&maxAge=5
@@ -40,7 +40,7 @@ you also can combine species and age query with '&'
 http://localhost:8000/pets?species=bird&minAge=2&maxAge=10
 ```
 
-###get pet by id
+### get pet by id
 to get a pet by id we attach a simple validator for password and the id itself, might not be secure just for reference
 ```
 http://localhost:8000/pets/1?password=please
