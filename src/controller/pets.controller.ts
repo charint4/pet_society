@@ -1,0 +1,63 @@
+import type { Request, Response } from "express";
+
+import { pets } from "../data/pets";
+import type { Pet } from "../data/pets";
+
+type PetQueryParams = {
+  species?: string;
+  adopted?: "true" | "false";
+  minAge?: string;
+  maxAge?: string;
+};
+
+type PetIdQueryParams = {
+  password?: string;
+};
+
+export const getPets = (
+  req: Request<{}, unknown, {}, PetQueryParams>,
+  res: Response<Pet[]>,
+): void => {
+  const { species, adopted, minAge, maxAge } = req.query;
+
+  let filteredPets: Pet[] = pets;
+
+  if (species) {
+    filteredPets = filteredPets.filter(
+      (pet: Pet): boolean =>
+        pet.species.toLowerCase() === species.toLowerCase(),
+    );
+  }
+  if (adopted) {
+    filteredPets = filteredPets.filter(
+      (pet: Pet): boolean => pet.adopted === JSON.parse(adopted),
+    );
+  }
+  if (minAge) {
+    filteredPets = filteredPets.filter(
+      (pet: Pet): boolean => pet.age >= JSON.parse(minAge),
+    );
+  }
+  if (maxAge) {
+    filteredPets = filteredPets.filter(
+      (pet: Pet): boolean => pet.age <= JSON.parse(maxAge),
+    );
+  }
+  res.json(filteredPets);
+};
+
+export const getPetById = (
+  req: Request<{ id: string }, unknown, {}, PetIdQueryParams>,
+  res: Response<Pet | { message: string }>,
+): void => {
+  const { id } = req.params;
+  const pet: Pet | undefined = pets.find(
+    (pet: Pet): boolean => pet.id.toString() === id,
+  );
+
+  if (pet) {
+    res.json(pet);
+  }
+
+  res.status(404).json({ message: "Pet not found" });
+};
